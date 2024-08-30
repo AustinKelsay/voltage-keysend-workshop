@@ -25,10 +25,14 @@ export default function App() {
   const handleSendKeysend = async (e) => {
     e.preventDefault();
     try {
-      await sendKeysend(formData.destination, formData.amount, formData.message);
-      alert("Keysend sent successfully!");
-      const fetchedKeysends = await fetchKeysends();
-      setKeysends(fetchedKeysends);
+      const response = await sendKeysend(formData.destination, formData.amount, formData.message);
+      if (response?.payment_route) {
+        alert("Keysend sent successfully!");
+        const fetchedKeysends = await fetchKeysends();
+        setKeysends(fetchedKeysends);
+       } else {
+         alert("Error sending keysend: " + response?.payment_error);
+       }
     } catch (error) {
       alert("Error sending keysend: " + error.message);
     }
